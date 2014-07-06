@@ -12,12 +12,12 @@ namespace MVC_Week1_HK.Controllers
 {
     public class CustomController : Controller
     {
-        private DbEntities db = new DbEntities();
+        private 客戶資料Repository CustomRepos = RepositoryHelper.Get客戶資料Repository();
 
         // GET: Custom
         public ActionResult Index()
         {
-            return View(db.客戶資料.ToList());
+            return View(CustomRepos.All().ToList());
         }
 
         // GET: Custom/Details/5
@@ -27,7 +27,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = CustomRepos.Find(p=>p.Id==id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -50,8 +50,10 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
+             //   db.客戶資料.Add(客戶資料);
+               // db.SaveChanges();
+                CustomRepos.Add(客戶資料);
+                CustomRepos.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +67,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = CustomRepos.Find(p => p.Id == id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -82,8 +84,8 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
+                this.CustomRepos.UnitOfWork.Context.Entry(客戶資料).State = EntityState.Modified;
+                this.CustomRepos.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
             return View(客戶資料);
@@ -96,7 +98,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = CustomRepos.Find(p => p.Id == id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -109,9 +111,11 @@ namespace MVC_Week1_HK.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
-            db.SaveChanges();
+            客戶資料 客戶資料 = CustomRepos.Find(p => p.Id == id);
+            //db.客戶資料.Remove(客戶資料);
+            //db.SaveChanges();
+            CustomRepos.Delete(客戶資料);
+            CustomRepos.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
@@ -119,7 +123,7 @@ namespace MVC_Week1_HK.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+             //   db.Dispose();
             }
             base.Dispose(disposing);
         }

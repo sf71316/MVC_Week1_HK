@@ -12,13 +12,13 @@ namespace MVC_Week1_HK.Controllers
 {
     public class ContactController : Controller
     {
-        private DbEntities db = new DbEntities();
-
+        //private DbEntities db = new DbEntities();
+        private 客戶聯絡人Repository ContactRepo = RepositoryHelper.Get客戶聯絡人Repository();
         // GET: Contact
         public ActionResult Index()
         {
-            var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料);
-            return View(客戶聯絡人.ToList());
+            //var 客戶聯絡人 = db.客戶聯絡人.Include(客 => 客.客戶資料);
+            return View(ContactRepo.All().ToList());
         }
 
         // GET: Contact/Details/5
@@ -28,7 +28,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = ContactRepo.Find(p=>p.Id==id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -39,7 +39,7 @@ namespace MVC_Week1_HK.Controllers
         // GET: Contact/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -52,12 +52,12 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶聯絡人.Add(客戶聯絡人);
-                db.SaveChanges();
+                ContactRepo.Add(客戶聯絡人);
+                ContactRepo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -68,12 +68,12 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = ContactRepo.Find(p=>p.Id==id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -86,11 +86,11 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶聯絡人).State = EntityState.Modified;
-                db.SaveChanges();
+                ContactRepo.UnitOfWork.Context.Entry(客戶聯絡人).State = EntityState.Modified;
+                ContactRepo.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(db.客戶資料, "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -101,7 +101,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
+            客戶聯絡人 客戶聯絡人 = this.ContactRepo.Find(p=>id==id.Value);
             if (客戶聯絡人 == null)
             {
                 return HttpNotFound();
@@ -114,9 +114,11 @@ namespace MVC_Week1_HK.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
-            db.客戶聯絡人.Remove(客戶聯絡人);
-            db.SaveChanges();
+            客戶聯絡人 客戶聯絡人 = ContactRepo.Find(p => p.Id == id);
+            //db.客戶聯絡人.Remove(客戶聯絡人);
+           // db.SaveChanges();
+            this.ContactRepo.Delete(客戶聯絡人);
+            this.ContactRepo.UnitOfWork.Commit();
             return RedirectToAction("Index");
         }
 
@@ -124,7 +126,7 @@ namespace MVC_Week1_HK.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+              //  db.Dispose();
             }
             base.Dispose(disposing);
         }
