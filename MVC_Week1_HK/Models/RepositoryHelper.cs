@@ -47,6 +47,19 @@ namespace MVC_Week1_HK.Models
 			var repository = new 客戶聯絡人Repository();
 			repository.UnitOfWork = unitOfWork;
 			return repository;
-		}		
+		}
+        public static ReportRepository GetViewRepository()
+        {
+            var repository = new ReportRepository();
+            repository.UnitOfWork = GetUnitOfWork();
+            return repository;
+        }
+
+        public static ReportRepository GetViewRepository(IUnitOfWork unitOfWork)
+        {
+            var repository = new ReportRepository();
+            repository.UnitOfWork = unitOfWork;
+            return repository;
+        }		
 	}
 }

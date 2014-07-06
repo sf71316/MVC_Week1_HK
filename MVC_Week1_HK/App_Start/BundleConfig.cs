@@ -29,7 +29,7 @@ namespace MVC_Week1_HK
 
             // 將 EnableOptimizations 設為 false 以進行偵錯。如需詳細資訊，
             // 請造訪 http://go.microsoft.com/fwlink/?LinkId=301862
-            BundleTable.EnableOptimizations = true;
+            //BundleTable.EnableOptimizations = true;
         }
     }
 }

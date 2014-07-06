@@ -84,8 +84,8 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                this.CustomRepos.UnitOfWork.Context.Entry(客戶資料).State = EntityState.Modified;
-                this.CustomRepos.UnitOfWork.Commit();
+                this.CustomRepos.Edit(客戶資料);
+                
                 return RedirectToAction("Index");
             }
             return View(客戶資料);

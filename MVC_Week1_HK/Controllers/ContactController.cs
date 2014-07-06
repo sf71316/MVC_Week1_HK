@@ -39,7 +39,7 @@ namespace MVC_Week1_HK.Controllers
         // GET: Contact/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(RepositoryHelper.Get客戶資料Repository().All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -73,7 +73,7 @@ namespace MVC_Week1_HK.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(RepositoryHelper.Get客戶資料Repository().All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 
@@ -86,11 +86,11 @@ namespace MVC_Week1_HK.Controllers
         {
             if (ModelState.IsValid)
             {
-                ContactRepo.UnitOfWork.Context.Entry(客戶聯絡人).State = EntityState.Modified;
-                ContactRepo.UnitOfWork.Commit();
+                
+                this.ContactRepo.Edit(客戶聯絡人);
                 return RedirectToAction("Index");
             }
-            ViewBag.客戶Id = new SelectList(ContactRepo.All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
+            ViewBag.客戶Id = new SelectList(RepositoryHelper.Get客戶資料Repository().All(), "Id", "客戶名稱", 客戶聯絡人.客戶Id);
             return View(客戶聯絡人);
         }
 

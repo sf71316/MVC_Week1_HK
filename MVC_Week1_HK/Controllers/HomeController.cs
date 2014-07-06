@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVC_Week1_HK.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,11 +21,10 @@ namespace MVC_Week1_HK.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Report()
         {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
+            return View(RepositoryHelper.GetViewRepository().All());
         }
     }
 }
